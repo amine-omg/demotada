@@ -170,16 +170,9 @@ const allowedOrigins = [
 
 // 2. Configuration dynamique de CORS
 const corsOptions = {
-  origin: function (origin, callback) {
-    // Autorise les requêtes sans origine (ex: Postman) ou si l'origine est dans la liste
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.log("Origine bloquée par CORS :", origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true, // Important pour les cookies/sessions si tu en utilises
+  origin: process.env.FRONTEND_URL || '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
   optionsSuccessStatus: 200 
 };
 
