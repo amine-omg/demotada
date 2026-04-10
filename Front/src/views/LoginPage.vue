@@ -6,7 +6,7 @@
       <div class="absolute top-12 left-12">
         <router-link to="/" class="flex items-center gap-3 group">
           <img 
-            src="http://localhost:3000/uploads/horns.png" 
+            src="https://demotada.onrender.com/uploads/horns.png" 
             alt="Logo" 
             class="h-10 w-auto object-contain transition-transform duration-500 group-hover:scale-110" 
           />

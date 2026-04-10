@@ -7,7 +7,6 @@ const emit = defineEmits(['onboarding-complete']);
 const router = useRouter();
 const userStore = useUserStore();
 
-// Le modal s'affiche si l'utilisateur n'est pas encore "onboarded"
 const isVisible = computed(() => !userStore.user.isOnboarded);
 const currentStep = ref(1);
 const selectedRole = ref<string | null>(null);
