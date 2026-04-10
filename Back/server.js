@@ -165,7 +165,8 @@ const allowedOrigins = [
   'http://app.syali.fr',
   'https://app.syali.fr',
   'http://localhost:5173', // Port par défaut de Vite (ton front local)
-  'http://localhost:3000'  // Ton port backend local si besoin
+  'http://localhost:3000',  // Ton port backend local si besoin
+  'https://demotada-1zyrks8wj-aminebellxs-projects.vercel.app'
 ];
 
 // 2. Configuration dynamique de CORS
