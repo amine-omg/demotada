@@ -1,0 +1,181 @@
+<template>
+  <div class="h-screen bg-[#F8F9FA] font-sans text-[#1A1A1A] flex flex-col overflow-hidden relative">
+    <TheHeader pageTitle="Studio de Liasses PNCEE" :showBackButton="false" />
+
+    <div class="flex-1 flex overflow-hidden">
+      
+      <div class="w-[30%] bg-white border-r border-gray-200 p-8 flex flex-col gap-8 shrink-0">
+        <div class="flex flex-col gap-1">
+          <span class="text-[9px] font-black uppercase tracking-[0.4em] text-[#D4AF37]">Workflow Liasse</span>
+          <h2 class="text-xl font-black text-[#1A1A1A] tracking-tighter">Générateur Certifié</h2>
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <button v-for="type in docTypes" :key="type.id" 
+                  @click="selectedDocType = type.id"
+                  class="flex items-center justify-between p-4 rounded-2xl border-2 transition-all group"
+                  :class="selectedDocType === type.id ? 'border-black bg-[#F5F2ED] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' : 'border-gray-100 bg-white hover:border-black'">
+            <div class="flex items-center gap-4">
+              <span class="text-xl group-hover:scale-110 transition-transform">{{ type.icon }}</span>
+              <div class="text-left">
+                <p class="text-[11px] font-black uppercase tracking-widest">{{ type.label }}</p>
+                <p class="text-[9px] text-gray-400 font-bold uppercase">{{ type.ref }}</p>
+              </div>
+            </div>
+            <div v-if="generatedDocs.includes(type.id)" class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center text-white text-[10px]">✓</div>
+          </button>
+        </div>
+
+        <label class="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-[2.5rem] bg-gray-50/50 hover:bg-gray-100 hover:border-[#D4AF37] transition-all cursor-pointer group relative overflow-hidden">
+          <input type="file" @change="handleUpload" class="hidden" :disabled="isAnalyzing" />
+          <div v-if="!isAnalyzing" class="text-center p-6">
+            <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">📁</div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-[#1A1A1A]">Glissez le Devis</p>
+            <p class="text-[8px] text-gray-400 font-bold uppercase mt-2">Extraction multi-documents</p>
+          </div>
+          <div v-else class="text-center z-10">
+            <div class="w-12 h-12 border-2 border-gray-200 border-t-[#D4AF37] rounded-full animate-spin mb-4 mx-auto"></div>
+            <p class="text-[9px] font-black uppercase tracking-widest animate-pulse">Mapping Gemini...</p>
+          </div>
+          <div v-if="isAnalyzing" class="absolute inset-x-0 h-1 bg-[#D4AF37] shadow-[0_0_20px_rgba(212,175,55,1)] top-0 animate-[scan_2s_infinite]"></div>
+        </label>
+      </div>
+
+      <div class="w-[40%] bg-[#F5F2ED] p-10 overflow-y-auto custom-scrollbar-hide">
+        <template v-if="extractedData">
+          <div class="flex flex-col gap-1 mb-8">
+            <span class="text-[9px] font-black uppercase tracking-[0.4em] text-[#D4AF37]">Édition Intelligente</span>
+            <h2 class="text-xs font-black uppercase tracking-widest text-[#1A1A1A]">Données Extraites pour {{ selectedDocType }}</h2>
+          </div>
+
+          <div class="bg-white border-2 border-black rounded-[2rem] p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-6">
+            <div class="space-y-4 text-left">
+              <div class="space-y-1">
+                <label class="text-[8px] font-black uppercase text-gray-400">Nom du site</label>
+                <input v-model="formData.nom_site" class="w-full bg-gray-50 border border-black/10 rounded-xl p-3 text-xs font-black outline-none focus:border-black"/>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <label class="text-[8px] font-black uppercase text-gray-400">Surface (m²)</label>
+                  <input v-model="formData.surface" class="w-full bg-gray-50 border border-black/10 rounded-xl p-3 text-xs font-black outline-none"/>
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[8px] font-black uppercase text-gray-400">Zone Climatique</label>
+                  <input v-model="formData.zone" class="w-full bg-gray-50 border border-black/10 rounded-xl p-3 text-xs font-black outline-none"/>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="selectedDocType === 'BS'" class="space-y-4 pt-4 border-t border-gray-100 text-left">
+              <p class="text-[9px] font-black text-[#D4AF37] uppercase tracking-widest">Options du Cadre de Contribution</p>
+              <div class="space-y-1">
+                <label class="text-[8px] font-black uppercase text-gray-400">Date de signature du cadre</label>
+                <input type="date" class="w-full bg-gray-50 border border-black/10 rounded-xl p-3 text-xs font-black outline-none"/>
+              </div>
+            </div>
+
+            <div v-if="selectedDocType === 'R2'" class="space-y-4 pt-4 border-t border-gray-100 text-left">
+              <p class="text-[9px] font-black text-[#D4AF37] uppercase tracking-widest">Tableau de Distribution</p>
+              <div class="space-y-1">
+                <label class="text-[8px] font-black uppercase text-gray-400">Nombre de lignes extraites</label>
+                <input value="18 lignes détectées" readonly class="w-full bg-[#F5F2ED] border border-black/5 rounded-xl p-3 text-[10px] font-black outline-none"/>
+              </div>
+            </div>
+
+            <button @click="generateCurrent" :disabled="isGenerating"
+                    class="w-full py-5 bg-black text-[#D4AF37] rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-[4px_4px_0px_0px_rgba(212,175,55,0.3)] transition-all hover:scale-[1.02] flex items-center justify-center gap-3">
+              <span v-if="isGenerating" class="w-4 h-4 border-2 border-[#D4AF37]/30 border-t-[#D4AF37] rounded-full animate-spin"></span>
+              {{ isGenerating ? 'Génération...' : 'Sceller le document' }}
+            </button>
+          </div>
+        </template>
+        
+        <div v-else class="h-full flex flex-col items-center justify-center text-gray-300">
+           <p class="text-6xl mb-6 opacity-20">⚡</p>
+           <p class="text-[10px] font-black uppercase tracking-widest">Prêt pour l'extraction Gemini</p>
+        </div>
+      </div>
+
+      <div class="w-[30%] bg-white p-10 flex flex-col border-l border-gray-200 shrink-0">
+        <h2 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-8 border-b border-gray-50 pb-4 flex items-center gap-2">
+           <svg class="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+           Liasse PNCEE Garantie
+        </h2>
+
+        <div class="flex-1 space-y-4">
+          <div v-for="type in docTypes" :key="type.id" 
+               class="p-4 rounded-2xl border-2 flex items-center justify-between transition-all"
+               :class="generatedDocs.includes(type.id) ? 'border-green-100 bg-green-50/30' : 'border-gray-50 bg-gray-50/30 opacity-50'">
+            <div class="flex items-center gap-3">
+               <span class="text-lg">{{ generatedDocs.includes(type.id) ? '📄' : '⏳' }}</span>
+               <p class="text-[10px] font-black uppercase tracking-widest text-gray-600">{{ type.label }}</p>
+            </div>
+            <button v-if="generatedDocs.includes(type.id)" class="p-2 hover:bg-white rounded-lg transition-colors">
+               <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <button v-if="generatedDocs.length > 0" class="w-full py-5 bg-[#1A1A1A] text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] mt-8 flex items-center justify-center gap-3 shadow-xl">
+           Exporter l'archive PNCEE
+           <svg class="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import TheHeader from '../components/TheHeader.vue';
+
+const isAnalyzing = ref(false);
+const isGenerating = ref(false);
+const extractedData = ref(null);
+const selectedDocType = ref('AH');
+const generatedDocs = ref([]);
+
+const docTypes = [
+  { id: 'AH', label: 'Attestation Honneur', ref: 'AH BAT-EN-101', icon: '📝' },
+  { id: 'BS', label: 'Cadre Contribution', ref: 'Bons de Souscription', icon: '🤝' },
+  { id: 'R2', label: 'Tableau Distrib.', ref: 'Annexe R2 / QDP', icon: '📊' }
+];
+
+const formData = ref({
+  nom_site: '',
+  surface: '2000',
+  zone: 'H1'
+});
+
+const handleUpload = () => {
+  isAnalyzing.value = true;
+  setTimeout(() => {
+    isAnalyzing.value = false;
+    extractedData.value = true;
+    formData.value.nom_site = "AGENCE A2BCD";
+  }, 2500);
+};
+
+const generateCurrent = () => {
+  isGenerating.value = true;
+  setTimeout(() => {
+    isGenerating.value = false;
+    if (!generatedDocs.value.includes(selectedDocType.value)) {
+      generatedDocs.value.push(selectedDocType.value);
+    }
+  }, 1500);
+};
+</script>
+
+<style scoped>
+.custom-scrollbar-hide::-webkit-scrollbar { display: none; }
+.animate-fade-in { animation: fadeIn 0.5s ease-out; }
+@keyframes scan {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>

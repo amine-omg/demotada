@@ -1,0 +1,9 @@
+{
+  "watch": ["."],
+  "ext": "js,mjs,json",
+  "ignore": [
+    "uploads/*",
+    "node_modules/*"
+  ],
+  "exec": "node --inspect server.js"
+}

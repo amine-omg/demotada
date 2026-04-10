@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session de Cours en Direct - Syali</title>
+    
+    <!-- CSS de Zoom, avec une version stable -->
+    <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.18.0/css/bootstrap.css" />
+    
+    <style>
+        /* Styles pour que Zoom prenne tout l'écran dans l'iframe */
+        body { margin: 0; padding: 0; overflow: hidden; }
+        #zmmtg-root { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <!-- L'élément racine où le SDK de Zoom va s'attacher -->
+    <div id="zmmtg-root"></div>
+
+    <!-- Scripts de Zoom, avec une version stable -->
+    <script src="https://source.zoom.us/2.18.0/lib/vendor/react.min.js"></script>
+    <script src="https://source.zoom.us/2.18.0/lib/vendor/react-dom.min.js"></script>
+    <script src="https://source.zoom.us/2.18.0/lib/vendor/redux.min.js"></script>
+    <script src="https://source.zoom.us/2.18.0/lib/vendor/redux-thunk.min.js"></script>
+    <script src="https://source.zoom.us/2.18.0/lib/vendor/lodash.min.js"></script>
+    <script src="https://source.zoom.us/2.18.0/zoom-meeting-2.18.0.min.js"></script>
+
+    <script>
+        // Ce script initialise et lance la réunion Zoom dans l'iframe
+        
+        // On indique au SDK de charger ses ressources depuis le CDN de Zoom
+        ZoomMtg.setZoomJSLib('https://source.zoom.us/2.18.0/lib', 'av');
+        
+        // Précharger les ressources
+        ZoomMtg.preLoadWasm();
+        ZoomMtg.prepareWebSDK();
+        
+        // Écouter les messages venant de la page parente (CoursLivePage.vue)
+        window.addEventListener('message', (event) => {
+            const { meetingData } = event.data;
+            if (meetingData) {
+                // Initialiser la réunion avec les données reçues
+                ZoomMtg.init({
+                    leaveUrl: window.location.origin,
+                    isSupportAV: true,
+                    success: () => {
+                        // Joindre la réunion
+                        ZoomMtg.join({
+                            sdkKey: meetingData.sdkKey,
+                            signature: meetingData.signature,
+                            meetingNumber: meetingData.meetingNumber,
+                            userName: meetingData.userName,
+                            success: (res) => {
+                                console.log('Réunion rejointe avec succès');
+                            },
+                            error: (res) => {
+                                console.error('Erreur pour rejoindre la réunion:', res);
+                            }
+                        });
+                    },
+                    error: (res) => {
+                        console.error('Erreur d\'initialisation du SDK Zoom:', res);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
