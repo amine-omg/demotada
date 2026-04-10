@@ -2,7 +2,7 @@
   <div :class="isMobile ? 'h-[100dvh]' : 'h-screen'" class="w-full bg-[#F8F9FA] font-sans text-[#1A1A1A] flex flex-col overflow-hidden relative">
     
     <TheHeader 
-      :pageTitle="dossier ? `Certification Cockpit — ${dossier._id.substring(0, 8)}` : 'Chargement...'" 
+      :pageTitle="dossier ? `Cockpit` : 'Chargement...'" 
       :showBackButton="true" 
       @back="$router.push('/mandataire')" 
       class="shrink-0"
