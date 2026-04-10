@@ -100,7 +100,7 @@ const isAdmin = computed(() => userRole.value === 'admin');
       <router-link to="/" class="flex items-center gap-3 group">
         <div class="w-12 h-12 flex items-center justify-center overflow-visible">
           <img 
-            src="http://localhost:3000/uploads/horns.png" 
+            src="https://demotada.onrender.com/uploads/horns.png" 
             alt="Logo Karnain" 
             class="w-full h-full object-contain filter brightness-110 group-hover:scale-110 transition-transform duration-500"
           />
