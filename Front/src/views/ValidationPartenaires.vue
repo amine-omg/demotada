@@ -1,3 +1,68 @@
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'; // Ajout de onUnmounted ici
+import api from '/services/api'; 
+import TheHeader from '../components/TheHeader.vue';
+
+const pendingEntreprises = ref([]);
+const selectedEnt = ref(null);
+const isLoading = ref(true);
+const isProcessing = ref(false);
+
+// ---- GESTION DU RESPONSIVE (Render Adaptatif) ----
+const isMobile = ref(false);
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 1024; // Point de bascule pour la grille desktop
+};
+
+const fetchPending = async () => {
+  isLoading.value = true;
+  try {
+    const res = await api.get('/api/demo/entreprises');
+    // On ne garde que les entreprises en attente de validation
+    pendingEntreprises.value = res.data.data.filter(e => e.statutValidation === 'en_attente');
+  } catch (error) {
+    console.error("Erreur chargement attente:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const selectEntreprise = (ent) => {
+  selectedEnt.value = ent;
+};
+
+const traiterDemande = async (nouveauStatut) => {
+  if (!selectedEnt.value) return;
+  
+  isProcessing.value = true;
+  try {
+    await api.put(`/api/demo/entreprises/${selectedEnt.value._id}`, {
+      statutValidation: nouveauStatut
+    });
+    
+    // Mise à jour locale
+    pendingEntreprises.value = pendingEntreprises.value.filter(e => e._id !== selectedEnt.value._id);
+    selectedEnt.value = null;
+    
+  } catch (error) {
+    console.error("Erreur lors du traitement:", error);
+    alert("Une erreur est survenue.");
+  } finally {
+    isProcessing.value = false;
+  }
+};
+
+onMounted(() => {
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+  fetchPending();
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile);
+});
+</script>
+
 <template>
   <div :class="isMobile ? 'h-[100dvh]' : 'min-h-screen'" class="w-full max-w-[100vw] bg-[#F8F9FA] font-sans text-[#1A1A1A] flex flex-col overflow-x-hidden overflow-y-hidden relative min-w-0">
     
@@ -48,7 +113,7 @@
               <span class="w-2 h-2 rounded-full bg-orange-400 animate-pulse shrink-0"></span>
             </div>
             <div class="mt-3 flex items-center gap-3 text-[8px] font-black uppercase tracking-widest text-gray-400 min-w-0 pl-1">
-              <span class="flex items-center gap-1 truncate"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/></svg>{{ ent.siret }}</span>
+              <span class="flex items-center gap-1 truncate"><svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/></svg>{{ ent.siret }}</span>
               <span class="flex items-center gap-1 truncate" v-if="ent.ville"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-width="2"/></svg>{{ ent.ville }}</span>
             </div>
           </button>
@@ -123,7 +188,6 @@
       </div>
     </div>
 
-
     <div v-else class="flex-1 max-w-[1400px] mx-auto w-full p-8 mt-4 grid grid-cols-12 gap-8 h-[calc(100vh-6rem)]">
       
       <div class="col-span-5 bg-white border-2 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col overflow-hidden h-full relative z-10">
@@ -174,11 +238,11 @@
               <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{{ ent.type === 'bureau_etude' ? "Bureau d'études" : ent.type === 'installateur' ? "Installateur PRO" : "Client Tertiaire" }}</p>
               <div class="mt-2 flex items-center gap-4 text-[9px] font-black uppercase tracking-widest text-gray-400">
                 <span class="flex items-center gap-1">
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                   {{ ent.siret }}
                 </span>
                 <span class="flex items-center gap-1" v-if="ent.ville">
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                   {{ ent.ville }}
                 </span>
               </div>
@@ -342,69 +406,3 @@
 .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 </style>
-<script setup>
-import { ref, onMounted } from 'vue';
-import api from '/services/api'; 
-import TheHeader from '../components/TheHeader.vue';
-
-const pendingEntreprises = ref([]);
-const selectedEnt = ref(null);
-const isLoading = ref(true);
-const isProcessing = ref(false);
-
-const fetchPending = async () => {
-  isLoading.value = true;
-  try {
-    const res = await api.get('/api/demo/entreprises');
-    pendingEntreprises.value = res.data.data.filter(e => e.statutValidation === 'en_attente');
-  } catch (error) {
-    console.error("Erreur chargement attente:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const selectEntreprise = (ent) => {
-  selectedEnt.value = ent;
-};
-
-const traiterDemande = async (nouveauStatut) => {
-  if (!selectedEnt.value) return;
-  
-  isProcessing.value = true;
-  try {
-    await api.put(`/api/demo/entreprises/${selectedEnt.value._id}`, {
-      statutValidation: nouveauStatut
-    });
-    
-    pendingEntreprises.value = pendingEntreprises.value.filter(e => e._id !== selectedEnt.value._id);
-    selectedEnt.value = null;
-    
-  } catch (error) {
-    console.error("Erreur lors du traitement:", error);
-    alert("Une erreur est survenue lors de la mise à jour.");
-  } finally {
-    isProcessing.value = false;
-  }
-};
-
-// ---- GESTION DU RESPONSIVE (Render Adaptatif) ----
-const isMobile = ref(false);
-const checkMobile = () => {
-  isMobile.value = window.innerWidth < 1024; // 1024px pour correspondre au grid-cols-12
-};
-
-
-
-
-onMounted(() => {
-  checkMobile();
-  window.addEventListener('resize', checkMobile);
-  fetchPending();
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', checkMobile);
-});
-
-</script>
