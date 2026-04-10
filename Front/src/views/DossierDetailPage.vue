@@ -15,16 +15,16 @@
 
     <template v-else-if="dossier">
       
-      <div v-if="isMobile" class="flex-1 flex flex-col overflow-hidden w-full relative">
+    <div v-if="isMobile" class="flex-1 flex flex-col overflow-hidden w-full relative min-w-0">
         
-        <div class="bg-white border-b-2 border-black px-4 py-4 shrink-0 z-40 flex flex-col gap-4 shadow-sm w-full">
+        <div class="bg-white border-b-2 border-black px-4 py-4 shrink-0 z-40 flex flex-col gap-4 shadow-sm w-full min-w-0 overflow-x-hidden">
           
-          <div class="flex flex-col text-left w-full">
+          <div class="flex flex-col text-left w-full min-w-0">
             <span class="text-[8px] font-black uppercase tracking-widest text-[#D4AF37] mb-0.5">Bénéficiaire</span>
-            <div class="flex items-center justify-between w-full">
+            <div class="flex items-center gap-2 w-full min-w-0">
               <input v-if="isEditingClient" ref="clientInput" v-model="tempClientName" @blur="saveClientName" @keyup.enter="saveClientName"
-                     class="text-xl font-black text-[#1A1A1A] tracking-tighter uppercase leading-none bg-gray-50 border-b-2 border-[#D4AF37] outline-none w-full" />
-              <h1 v-else class="text-xl font-black text-[#1A1A1A] tracking-tighter uppercase leading-none truncate">
+                     class="text-xl font-black text-[#1A1A1A] tracking-tighter uppercase leading-none bg-gray-50 border-b-2 border-[#D4AF37] outline-none flex-1 min-w-0" />
+              <h1 v-else class="text-xl font-black text-[#1A1A1A] tracking-tighter uppercase leading-none truncate flex-1 min-w-0">
                 {{ dossier.client || 'CLIENT À DÉFINIR' }}
               </h1>
               <button @click="startEditClient" class="p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0">
@@ -33,46 +33,46 @@
             </div>
           </div>
           
-          <div class="flex gap-2 w-full">
-             <div class="flex-1 bg-white border-2 border-black px-3 py-2 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-left shrink-0">
-                <p class="text-[7px] font-black text-gray-400 uppercase">Volume</p>
+          <div class="flex gap-2 w-full min-w-0">
+             <div class="flex-1 bg-white border-2 border-black px-3 py-2 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-left min-w-0 overflow-hidden">
+                <p class="text-[7px] font-black text-gray-400 uppercase truncate">Volume</p>
                 <p class="text-sm font-black leading-none truncate">{{ simulationData.kwhCumac }} <span class="text-[8px]">kWh</span></p>
              </div>
-             <div class="flex-1 bg-black border-2 border-black px-3 py-2 rounded-xl shadow-[3px_3px_0px_0px_rgba(212,175,55,0.3)] text-left shrink-0">
-                <p class="text-[7px] font-black text-gray-400 uppercase">Prime</p>
+             <div class="flex-1 bg-black border-2 border-black px-3 py-2 rounded-xl shadow-[3px_3px_0px_0px_rgba(212,175,55,0.3)] text-left min-w-0 overflow-hidden">
+                <p class="text-[7px] font-black text-gray-400 uppercase truncate">Prime</p>
                 <p class="text-sm font-black text-[#D4AF37] leading-none truncate">{{ simulationData.primeEstimee }} €</p>
              </div>
           </div>
           
-          <div class="w-full flex bg-gray-100 p-1 rounded-xl border-2 border-black">
+          <div class="w-full flex bg-gray-100 p-1 rounded-xl border-2 border-black overflow-x-auto hide-scrollbar shrink-0">
             <button v-for="(tab, idx) in ['simulation', 'ah', 'signature']" :key="tab" @click="activeDoc = tab"
-              class="flex-1 px-1 py-2.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap"
+              class="flex-1 px-1 py-2.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap shrink-0"
               :class="activeDoc === tab ? 'bg-black text-[#D4AF37] shadow-md' : 'text-gray-400 hover:text-black'">
               {{ idx + 1 }}. {{ tab === 'simulation' ? 'Audit RAI' : tab === 'ah' ? 'Map AH' : 'Signature' }}
             </button>
           </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto w-full p-4 flex flex-col gap-4 pb-20 custom-scrollbar-hide">
+        <div class="flex-1 overflow-y-auto overflow-x-hidden w-full p-4 flex flex-col gap-4 pb-20 custom-scrollbar-hide min-w-0">
           
-          <div class="bg-white border-2 border-black rounded-[1.5rem] p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left relative overflow-hidden">
+          <div class="bg-white border-2 border-black rounded-[1.5rem] p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left relative overflow-hidden w-full min-w-0">
             
             <div v-if="activeDoc === 'simulation'" class="animate-fade-in space-y-5">
               <h2 class="text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 border-b border-gray-100 pb-3">
-                <span class="w-6 h-6 bg-black text-[#D4AF37] rounded flex items-center justify-center text-[9px]">01</span>
+                <span class="w-6 h-6 bg-black text-[#D4AF37] rounded flex items-center justify-center text-[9px] shrink-0">01</span>
                 Contrôle Antériorité (RAI)
               </h2>
               <div class="space-y-4">
-                <div v-if="raiSent" class="p-5 bg-green-50 border-2 border-green-500 rounded-xl">
-                  <p class="text-[8px] font-black text-green-600 uppercase mb-1">RAI Horodaté eIDAS</p>
-                  <p class="text-sm font-black tracking-tighter">{{ formatDateHours(raiDate) }}</p>
+                <div v-if="raiSent" class="p-5 bg-green-50 border-2 border-green-500 rounded-xl overflow-hidden">
+                  <p class="text-[8px] font-black text-green-600 uppercase mb-1 truncate">RAI Horodaté eIDAS</p>
+                  <p class="text-sm font-black tracking-tighter truncate">{{ formatDateHours(raiDate) }}</p>
                 </div>
                 <button v-else @click="sendRAI" class="w-full bg-black text-[#D4AF37] py-4 rounded-xl font-black text-[9px] uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:scale-95 transition-all">
                   Sceller l'incitation SMS
                 </button>
               </div>
-              <div class="bg-[#F5F2ED] border-2 border-dashed border-gray-300 rounded-xl p-5 flex flex-col justify-center">
-                 <p class="text-[8px] font-black text-gray-400 uppercase mb-3 text-center">Import preuve document</p>
+              <div class="bg-[#F5F2ED] border-2 border-dashed border-gray-300 rounded-xl p-5 flex flex-col justify-center min-w-0">
+                 <p class="text-[8px] font-black text-gray-400 uppercase mb-3 text-center truncate">Import preuve document</p>
                  <input type="date" v-model="manualRaiDate" class="w-full bg-white border-2 border-black rounded-lg p-2.5 text-[9px] font-black mb-3 outline-none" />
                  <button @click="triggerFileInput" class="w-full py-3 bg-white border-2 border-black rounded-lg text-[9px] font-black uppercase active:scale-95 transition-transform">Importer</button>
                  <input type="file" ref="fileInputRef" class="hidden" @change="handleRaiUpload" />
@@ -82,45 +82,45 @@
             <div v-if="activeDoc === 'ah'" class="animate-fade-in space-y-6">
               <div class="flex flex-col gap-4 border-b border-gray-100 pb-4">
                 <h2 class="text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                  <span class="w-6 h-6 bg-black text-[#D4AF37] rounded flex items-center justify-center text-[9px]">02</span>
-                  Mapping Réglementaire
+                  <span class="w-6 h-6 bg-black text-[#D4AF37] rounded flex items-center justify-center text-[9px] shrink-0">02</span>
+                  <span class="truncate">Mapping Réglementaire</span>
                 </h2>
-                <button @click="handleExtractAh" :disabled="isAnalyzing" class="w-full py-3 bg-black text-[#D4AF37] rounded-lg font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-transform">
+                <button @click="handleExtractAh" :disabled="isAnalyzing" class="w-full py-3 bg-black text-[#D4AF37] rounded-lg font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-transform shrink-0">
                    <span v-if="isAnalyzing" class="w-3 h-3 border-2 border-[#D4AF37]/30 border-t-[#D4AF37] rounded-full animate-spin"></span>
                    Extraction IA
                 </button>
               </div>
               <div class="space-y-4">
-                <h3 class="text-[9px] font-black uppercase text-[#D4AF37] tracking-widest">Calendrier</h3>
-                <div class="grid grid-cols-2 gap-3">
-                  <div class="space-y-1">
-                    <label class="text-[8px] font-black text-gray-400 uppercase">Engagement</label>
+                <h3 class="text-[9px] font-black uppercase text-[#D4AF37] tracking-widest truncate">Calendrier</h3>
+                <div class="grid grid-cols-2 gap-3 min-w-0">
+                  <div class="space-y-1 min-w-0">
+                    <label class="text-[8px] font-black text-gray-400 uppercase truncate block">Engagement</label>
                     <input type="date" v-model="formData.date_engagement" class="w-full bg-gray-50 border-2 border-black rounded-lg p-2.5 text-[9px] font-black" />
                   </div>
-                  <div class="space-y-1">
-                    <label class="text-[8px] font-black text-gray-400 uppercase">Début Travaux</label>
+                  <div class="space-y-1 min-w-0">
+                    <label class="text-[8px] font-black text-gray-400 uppercase truncate block">Début Travaux</label>
                     <input type="date" v-model="formData.date_debut_travaux" class="w-full bg-gray-50 border-2 border-black rounded-lg p-2.5 text-[9px] font-black" />
                   </div>
-                  <div class="space-y-1">
-                    <label class="text-[8px] font-black text-gray-400 uppercase">Date Facture</label>
+                  <div class="space-y-1 min-w-0">
+                    <label class="text-[8px] font-black text-gray-400 uppercase truncate block">Date Facture</label>
                     <input type="date" v-model="formData.date_facture" class="w-full bg-gray-50 border-2 border-black rounded-lg p-2.5 text-[9px] font-black" />
                   </div>
-                  <div class="space-y-1">
-                    <label class="text-[8px] font-black text-gray-400 uppercase">Réf. Facture</label>
+                  <div class="space-y-1 min-w-0">
+                    <label class="text-[8px] font-black text-gray-400 uppercase truncate block">Réf. Facture</label>
                     <input type="text" v-model="formData.ref_facture" placeholder="N°" class="w-full bg-gray-50 border-2 border-black rounded-lg p-2.5 text-[9px] font-black" />
                   </div>
                 </div>
               </div>
               <div class="space-y-4">
-                <h3 class="text-[9px] font-black uppercase text-[#D4AF37] tracking-widest">Spécifications</h3>
-                <div class="flex flex-col gap-3">
-                  <input v-model="formData.surface" placeholder="Surface m²" class="bg-gray-50 border-2 border-black rounded-lg p-3 text-[9px] font-black" />
-                  <div class="flex gap-3">
+                <h3 class="text-[9px] font-black uppercase text-[#D4AF37] tracking-widest truncate">Spécifications</h3>
+                <div class="flex flex-col gap-3 min-w-0">
+                  <input v-model="formData.surface" placeholder="Surface m²" class="w-full bg-gray-50 border-2 border-black rounded-lg p-3 text-[9px] font-black" />
+                  <div class="flex gap-3 w-full">
                     <input v-model="formData.resistance_thermique" placeholder="R" class="w-1/2 bg-gray-50 border-2 border-black rounded-lg p-3 text-[9px] font-black" />
                     <input v-model="formData.epaisseur" placeholder="Epais." class="w-1/2 bg-gray-50 border-2 border-black rounded-lg p-3 text-[9px] font-black" />
                   </div>
-                  <input v-model="formData.marque" placeholder="Marque" class="bg-gray-50 border-2 border-black rounded-lg p-3 text-[9px] font-black" />
-                  <input v-model="formData.reference" placeholder="Référence" class="bg-gray-50 border-2 border-black rounded-lg p-3 text-[9px] font-black" />
+                  <input v-model="formData.marque" placeholder="Marque" class="w-full bg-gray-50 border-2 border-black rounded-lg p-3 text-[9px] font-black" />
+                  <input v-model="formData.reference" placeholder="Référence" class="w-full bg-gray-50 border-2 border-black rounded-lg p-3 text-[9px] font-black" />
                 </div>
               </div>
               <button @click="handleGenerateAH" :disabled="isGeneratingAH || !canGenerateAH" class="w-full py-4 bg-[#D4AF37] text-white rounded-xl font-black text-[9px] uppercase tracking-[0.2em] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:scale-95 transition-all disabled:opacity-50">
@@ -130,42 +130,42 @@
 
             <div v-if="activeDoc === 'signature'" class="animate-fade-in space-y-6 text-left">
               <h2 class="text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 mb-4 border-b border-gray-100 pb-3">
-                <span class="w-6 h-6 bg-black text-[#D4AF37] rounded flex items-center justify-center text-[9px]">03</span>
-                Signature & Emmy
+                <span class="w-6 h-6 bg-black text-[#D4AF37] rounded flex items-center justify-center text-[9px] shrink-0">03</span>
+                <span class="truncate">Signature & Emmy</span>
               </h2>
-              <div class="p-5 bg-[#1A1A1A] rounded-xl border-2 border-black text-white space-y-4 mb-4">
-                 <p class="text-[8px] font-black uppercase text-[#D4AF37]">eIDAS Protocol</p>
+              <div class="p-5 bg-[#1A1A1A] rounded-xl border-2 border-black text-white space-y-4 mb-4 min-w-0">
+                 <p class="text-[8px] font-black uppercase text-[#D4AF37] truncate">eIDAS Protocol</p>
                  <button @click="sendSignature" :disabled="!isAhGenerated" class="w-full bg-[#D4AF37] text-black py-4 rounded-lg font-black text-[9px] uppercase tracking-widest shadow-lg active:scale-95 disabled:opacity-50 transition-all">
                     Lancer Signature
                  </button>
               </div>
-              <div class="p-5 bg-white border-2 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                 <p class="text-[8px] font-black uppercase text-gray-400 mb-1">Lot Dépôt</p>
-                 <p class="text-sm font-black uppercase">LOT_CEE_2026_415</p>
+              <div class="p-5 bg-white border-2 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] min-w-0">
+                 <p class="text-[8px] font-black uppercase text-gray-400 mb-1 truncate">Lot Dépôt</p>
+                 <p class="text-sm font-black uppercase truncate">LOT_CEE_2026_415</p>
               </div>
             </div>
           </div>
 
-          <div class="bg-white border-2 border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col text-left gap-4">
-             <div class="flex items-center gap-4 w-full">
+          <div class="bg-white border-2 border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col text-left gap-4 w-full min-w-0">
+             <div class="flex items-center gap-4 w-full min-w-0">
                 <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center text-lg border border-black/5 shrink-0">🏗️</div>
                 <div class="min-w-0 flex-1">
-                   <p class="text-[7px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Installateur</p>
+                   <p class="text-[7px] font-black text-gray-400 uppercase tracking-widest mb-0.5 truncate">Installateur</p>
                    <p class="text-xs font-black text-[#1A1A1A] uppercase truncate w-full">{{ dossier.installateur }}</p>
-                   <span class="text-[7px] font-mono text-gray-400 uppercase">SIRET: {{ dossier.siret }}</span>
+                   <span class="text-[7px] font-mono text-gray-400 uppercase truncate block">SIRET: {{ dossier.siret }}</span>
                 </div>
              </div>
-             <div class="bg-[#F5F2ED] px-3 py-2.5 rounded-lg border-2 border-black w-full flex justify-between items-center">
-                <p class="text-[7px] font-black uppercase text-[#D4AF37]">Réglementaire</p>
-                <p class="text-[9px] font-black">Zone {{ dossier?.auditIa?.zoneClimatique || 'H1' }} / Tert</p>
+             <div class="bg-[#F5F2ED] px-3 py-2.5 rounded-lg border-2 border-black w-full flex justify-between items-center min-w-0">
+                <p class="text-[7px] font-black uppercase text-[#D4AF37] truncate">Réglementaire</p>
+                <p class="text-[9px] font-black truncate ml-2">Zone {{ dossier?.auditIa?.zoneClimatique || 'H1' }} / Tert</p>
              </div>
           </div>
 
-          <div class="bg-white border-2 border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left flex flex-col overflow-hidden">
+          <div class="bg-white border-2 border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left flex flex-col overflow-hidden w-full min-w-0">
             <h2 class="text-[9px] font-black uppercase tracking-widest border-b border-gray-100 pb-3 flex justify-between items-center shrink-0">
                <span>Actifs Doc.</span>
             </h2>
-            <div class="flex overflow-x-auto gap-4 items-start mt-4 pb-2 hide-scrollbar snap-x snap-mandatory">
+            <div class="flex overflow-x-auto gap-4 items-start mt-4 pb-2 hide-scrollbar snap-x snap-mandatory w-full">
               
               <div class="w-[45vw] shrink-0 snap-start flex flex-col gap-2 group cursor-pointer" @click="activeDoc = 'devis'; showDocModal = true">
                  <p class="text-[7px] font-black uppercase text-gray-400 truncate">Devis Client</p>
@@ -181,43 +181,43 @@
                     <img src="/ah.png" class="w-full h-full object-cover transition-all" :class="{'blur-[2px] opacity-60': !isAhGenerated, 'blur-0 opacity-100': isAhGenerated}" />
                     <div class="absolute inset-0 bg-black/5"></div>
                     <div class="absolute inset-0 flex items-center justify-center p-2 text-center backdrop-blur-[1px]" :class="isAhGenerated ? 'hidden' : ''">
-                       <span class="text-[6px] font-black text-black/40 uppercase bg-white/95 px-1.5 py-1.5 rounded border border-black/10 shadow-sm">Génération</span>
+                       <span class="text-[6px] font-black text-black/40 uppercase bg-white/95 px-1.5 py-1.5 rounded border border-black/10 shadow-sm truncate max-w-full">Génération</span>
                     </div>
                     <div v-if="isAhGenerated" class="absolute bottom-2 right-2 bg-black text-[#D4AF37] px-1.5 py-0.5 rounded text-[5px] font-black uppercase shadow-lg">Scellé</div>
                  </div>
               </div>
 
               <div class="w-[45vw] shrink-0 snap-start flex flex-col gap-2 group cursor-pointer" @click="showCreateDocModal = true">
-                 <p class="text-[7px] font-black uppercase text-gray-400">Action</p>
+                 <p class="text-[7px] font-black uppercase text-gray-400 truncate">Action</p>
                  <div class="aspect-[21/29.7] w-full bg-[#F5F2ED] border-2 border-dashed border-black/20 rounded flex flex-col items-center justify-center gap-2">
-                    <div class="w-8 h-8 rounded-full border border-black flex items-center justify-center bg-white shadow-sm"><svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M12 4v16m8-8H4"/></svg></div>
-                    <span class="text-[7px] font-black uppercase text-black/30">Nouveau</span>
+                    <div class="w-8 h-8 rounded-full border border-black flex items-center justify-center bg-white shadow-sm shrink-0"><svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M12 4v16m8-8H4"/></svg></div>
+                    <span class="text-[7px] font-black uppercase text-black/30 truncate max-w-full px-2">Nouveau</span>
                  </div>
               </div>
             </div>
             
-            <div v-if="dossier.auditIa?.decision" class="mt-4 pt-4 border-t border-gray-100 shrink-0">
-               <div class="p-3 bg-[#FDFBF7] rounded-lg border border-black/5 shadow-inner text-left">
-                  <p class="text-[7px] font-black uppercase text-[#D4AF37] mb-1 tracking-widest">Rapport Gemini IA</p>
-                  <p class="text-[9px] font-bold italic leading-relaxed text-black/70 line-clamp-3">"{{ dossier.auditIa.decision }}"</p>
+            <div v-if="dossier.auditIa?.decision" class="mt-4 pt-4 border-t border-gray-100 shrink-0 min-w-0">
+               <div class="p-3 bg-[#FDFBF7] rounded-lg border border-black/5 shadow-inner text-left min-w-0">
+                  <p class="text-[7px] font-black uppercase text-[#D4AF37] mb-1 tracking-widest truncate">Rapport Gemini IA</p>
+                  <p class="text-[9px] font-bold italic leading-relaxed text-black/70 break-words line-clamp-3">"{{ dossier.auditIa.decision }}"</p>
                </div>
             </div>
           </div>
 
-          <div class="min-h-[200px] bg-[#F5F2ED] rounded-[1.5rem] p-4 text-left flex flex-col overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-             <div class="flex items-center justify-between mb-4 border-b border-black/10 pb-3 shrink-0">
-                <p class="text-[9px] font-black uppercase text-black/60 tracking-widest flex items-center gap-2">
-                   <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.3)]"></span>
+          <div class="min-h-[200px] bg-[#F5F2ED] rounded-[1.5rem] p-4 text-left flex flex-col overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black w-full min-w-0 shrink-0">
+             <div class="flex items-center justify-between mb-4 border-b border-black/10 pb-3 shrink-0 min-w-0">
+                <p class="text-[9px] font-black uppercase text-black/60 tracking-widest flex items-center gap-2 truncate">
+                   <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.3)] shrink-0"></span>
                    Audit Log
                 </p>
              </div>
-             <div class="flex-1 overflow-y-auto custom-scrollbar-v space-y-4 px-1 pb-4">
-                <div v-for="(log, idx) in isoLogs" :key="idx" class="flex gap-3 border-l-2 border-black/10 pl-3 ml-1">
-                   <div class="min-w-0">
-                      <p class="text-[10px] font-black text-black uppercase leading-none mb-1.5">{{ log.action }}</p>
-                      <p class="text-[8px] font-mono text-black/40 uppercase font-bold flex items-center gap-2">
-                        {{ formatDateHours(log.time) }}
-                        <span class="w-1 h-1 bg-black/10 rounded-full"></span>
+             <div class="flex-1 overflow-y-auto custom-scrollbar-v space-y-4 px-1 pb-4 min-w-0">
+                <div v-for="(log, idx) in isoLogs" :key="idx" class="flex gap-3 border-l-2 border-black/10 pl-3 ml-1 min-w-0">
+                   <div class="min-w-0 w-full">
+                      <p class="text-[10px] font-black text-black uppercase leading-tight mb-1.5 break-words">{{ log.action }}</p>
+                      <p class="text-[8px] font-mono text-black/40 uppercase font-bold flex items-center gap-2 truncate">
+                        <span class="shrink-0">{{ formatDateHours(log.time) }}</span>
+                        <span class="w-1 h-1 bg-black/10 rounded-full shrink-0"></span>
                         <span class="text-[#D4AF37] truncate">AGENT: {{ dossier._id.slice(0,4).toUpperCase() }}</span>
                       </p>
                    </div>
