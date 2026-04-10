@@ -5,16 +5,16 @@
 
     <div v-if="isMobile" class="flex-1 flex flex-col w-full overflow-hidden min-w-0 bg-gray-50/50">
       
-      <div class="h-1/3 md:h-1/2 w-full bg-white border-b-2 border-black shrink-0 relative overflow-hidden z-20">
+     <div class="h-[35vh] w-full bg-white border-b-2 border-black shrink-0 relative overflow-hidden z-20 shadow-sm">
         
         <label 
           v-if="!pdfPreviewUrl"
-          class="absolute inset-4 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-[1.5rem] bg-gray-50 hover:bg-gray-100 hover:border-[#D4AF37] transition-all cursor-pointer active:scale-95"
+          class="absolute inset-4 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-all cursor-pointer active:scale-95"
         >
           <input type="file" @change="uploadDocument" accept=".pdf,.jpg,.png" class="hidden" />
-          <div class="text-4xl sm:text-5xl mb-3 opacity-80">📄</div>
-          <h2 class="text-xs sm:text-sm font-black uppercase tracking-widest text-[#1A1A1A] mb-1">Glissez le devis</h2>
-          <p class="text-[8px] sm:text-[9px] font-bold text-[#D4AF37] uppercase tracking-widest text-center px-4">Génération auto AH</p>
+          <div class="text-5xl mb-2 opacity-80">📄</div>
+          <h2 class="text-xs font-black uppercase tracking-widest text-[#1A1A1A] mb-1">Glissez le devis</h2>
+          <p class="text-[8px] font-bold text-[#D4AF37] uppercase tracking-widest text-center px-2">Génération auto AH</p>
         </label>
 
         <div v-else class="absolute inset-0 flex flex-col bg-gray-100">
@@ -26,9 +26,9 @@
           <iframe :src="pdfPreviewUrl" class="w-full h-full border-none z-10 pointer-events-none" title="Aperçu"></iframe>
           
           <div v-if="isAnalyzing" class="absolute inset-0 z-30 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center p-4">
-            <div class="w-12 h-12 sm:w-16 sm:h-16 border-4 border-gray-200 border-t-[#D4AF37] rounded-full animate-spin mb-4 shadow-lg shrink-0"></div>
-            <p class="text-[10px] sm:text-xs font-black tracking-[0.2em] text-[#1A1A1A] uppercase animate-pulse text-center">Extraction en cours...</p>
-            <p class="text-[8px] sm:text-[9px] text-[#D4AF37] uppercase tracking-widest mt-2 font-bold text-center">Pré-remplissage CERFA</p>
+            <div class="w-12 h-12 border-4 border-gray-200 border-t-[#D4AF37] rounded-full animate-spin mb-4 shadow-lg shrink-0"></div>
+            <p class="text-[10px] font-black tracking-[0.2em] text-[#1A1A1A] uppercase animate-pulse text-center">Extraction Gemini...</p>
+            <p class="text-[8px] text-[#D4AF37] uppercase tracking-widest mt-2 font-bold text-center">Pré-remplissage CERFA</p>
           </div>
           <div v-if="isAnalyzing" class="absolute inset-x-0 h-1 bg-[#D4AF37] shadow-[0_0_20px_rgba(212,175,55,0.8)] top-0 animate-[scan_2s_ease-in-out_infinite] z-40"></div>
         </div>
