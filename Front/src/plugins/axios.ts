@@ -1,14 +1,15 @@
+// Front/src/services/axios.ts
 import axios from 'axios';
-import { useUserStore } from '../stores/user';
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000',
+  // Utilise VITE_API_URL pour être raccord avec Vercel et api.ts
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://demotada.onrender.com',
+  withCredentials: true 
 });
 
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
-
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
