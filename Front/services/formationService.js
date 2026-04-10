@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/formations"; // remplace par l'URL de ton backend
+const API_URL = `${import.meta.env.VITE_API_URL || 'https://demotada.onrender.com'}/api/formations`;
 
 // Récupérer toutes les formations
 export const getFormations = async () => {
