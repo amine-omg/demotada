@@ -394,43 +394,8 @@ const checkMobile = () => {
   isMobile.value = window.innerWidth < 1024; // 1024px pour correspondre au grid-cols-12
 };
 
-const pendingEntreprises = ref([]);
-const selectedEnt = ref(null);
-const isLoading = ref(true);
-const isProcessing = ref(false);
 
-const fetchPending = async () => {
-  isLoading.value = true;
-  try {
-    const res = await api.get('/api/demo/entreprises');
-    pendingEntreprises.value = res.data.data.filter(e => e.statutValidation === 'en_attente');
-  } catch (error) {
-    console.error("Erreur chargement attente:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};
 
-const selectEntreprise = (ent) => {
-  selectedEnt.value = ent;
-};
-
-const traiterDemande = async (nouveauStatut) => {
-  if (!selectedEnt.value) return;
-  isProcessing.value = true;
-  try {
-    await api.put(`/api/demo/entreprises/${selectedEnt.value._id}`, {
-      statutValidation: nouveauStatut
-    });
-    pendingEntreprises.value = pendingEntreprises.value.filter(e => e._id !== selectedEnt.value._id);
-    selectedEnt.value = null;
-  } catch (error) {
-    console.error("Erreur lors du traitement:", error);
-    alert("Une erreur est survenue lors de la mise à jour.");
-  } finally {
-    isProcessing.value = false;
-  }
-};
 
 onMounted(() => {
   checkMobile();
