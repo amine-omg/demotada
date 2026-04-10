@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
   // Utilise la variable d'env Vercel, ou l'URL Render en secours
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://demotada.onrender.com',
+  baseURL: 'https://demotada.onrender.com',
   timeout: 30000,
   withCredentials: true 
 });
