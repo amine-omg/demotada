@@ -7,7 +7,7 @@
         <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#D4AF37] opacity-20 rounded-full blur-3xl"></div>
         <div class="flex items-center justify-center gap-3 relative z-10">
           <div class="w-8 h-8 flex items-center justify-center">
-            <img src="http://localhost:3000/uploads/horns.png" alt="Logo" class="w-full h-full object-contain filter brightness-200" />
+            <img src="https://demotada.onrender.com/uploads/horns.png" alt="Logo" class="w-full h-full object-contain filter brightness-200" />
           </div>
           <h1 class="text-2xl font-black italic tracking-tighter">Karnain <span class="text-[#D4AF37] font-sans not-italic text-sm">Sign</span></h1>
         </div>
