@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-[#F8F9FA] font-sans text-[#1A1A1A] flex flex-col">
-    <TheHeader pageTitle="Générateur d'Attestation (Démo AH)" :showBackButton="false" />
+    <TheHeader pageTitle="Démo AH" :showBackButton="false" />
 
     <div class="flex-1 flex p-6 md:p-10 gap-8 h-[calc(100vh-6rem)] overflow-hidden">
       

@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-[#F8F9FA] font-sans text-[#1A1A1A] flex flex-col">
-    <TheHeader pageTitle="Générateur de Dossier (Démo IA)" :showBackButton="false" />
+    <TheHeader pageTitle="Generateur Demo" :showBackButton="false" />
 
     <div class="flex-1 flex p-6 md:p-10 gap-8 h-[calc(100vh-6rem)] overflow-hidden">
       
@@ -26,7 +26,7 @@
           
           <div v-if="isAnalyzing" class="absolute inset-0 z-30 bg-white/70 backdrop-blur-md flex flex-col items-center justify-center">
             <div class="w-20 h-20 border-4 border-gray-200 border-t-[#D4AF37] rounded-full animate-spin mb-6 shadow-lg"></div>
-            <p class="text-sm font-black tracking-[0.3em] text-[#1A1A1A] uppercase animate-pulse">Cerveau Gemini en cours...</p>
+            <p class="text-sm font-black tracking-[0.3em] text-[#1A1A1A] uppercase animate-pulse">Moteur IA en cours (Gemini 3)</p>
             <p class="text-[10px] text-[#D4AF37] uppercase tracking-widest mt-2 font-bold">Extraction des données & calcul CEE</p>
           </div>
           <div v-if="isAnalyzing" class="absolute inset-x-0 h-1 bg-[#D4AF37] shadow-[0_0_40px_rgba(212,175,55,0.8)] top-0 animate-[scan_2.5s_ease-in-out_infinite] z-40"></div>
