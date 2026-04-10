@@ -7,9 +7,9 @@ import './style.css';
 
 import axios from 'axios';
 import { useUserStore } from './stores/user';
-import * as pdfjs from 'pdfjs-dist';
+// import * as pdfjs from 'pdfjs-dist';
 
-pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs';
+// pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs';
 
 const app = createApp(App);
 const pinia = createPinia();
