@@ -1,5 +1,5 @@
 <template>
-  <div :class="isMobile ? 'h-[100dvh]' : 'h-screen'" class="w-full bg-[#F8F9FA] font-sans text-[#1A1A1A] flex flex-col overflow-hidden relative">
+  <div :class="isMobile ? 'h-[100dvh]' : 'h-screen'" class="w-full max-w-[100vw] bg-[#F8F9FA] font-sans text-[#1A1A1A] flex flex-col overflow-x-hidden overflow-y-hidden relative min-w-0">
     
     <TheHeader 
       :pageTitle="dossier ? `Cockpit` : 'Chargement...'" 
@@ -8,22 +8,22 @@
       class="shrink-0"
     />
 
-    <div v-if="isLoading" class="flex-1 flex flex-col items-center justify-center bg-white z-[100]">
-      <div class="w-12 h-12 border-[3px] border-gray-100 border-t-[#D4AF37] rounded-full animate-spin mb-4"></div>
-      <p class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400">Sécurisation du flux...</p>
+    <div v-if="isLoading" class="flex-1 flex flex-col items-center justify-center bg-white z-[100] w-full min-w-0 px-4">
+      <div class="w-12 h-12 border-[3px] border-gray-100 border-t-[#D4AF37] rounded-full animate-spin mb-4 shrink-0"></div>
+      <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.4em] text-gray-400 text-center break-words w-full">Sécurisation du flux...</p>
     </div>
 
     <template v-else-if="dossier">
       
-    <div v-if="isMobile" class="flex-1 flex flex-col overflow-hidden w-full relative min-w-0">
+      <div v-if="isMobile" class="flex-1 flex flex-col overflow-y-auto overflow-x-hidden w-full relative min-w-0">
         
-        <div class="bg-white border-b-2 border-black px-4 py-4 shrink-0 z-40 flex flex-col gap-4 shadow-sm w-full min-w-0 overflow-x-hidden">
+        <div class="bg-white border-b-2 border-black px-4 py-4 shrink-0 z-40 flex flex-col gap-4 shadow-sm w-full min-w-0">
           
           <div class="flex flex-col text-left w-full min-w-0">
             <span class="text-[8px] font-black uppercase tracking-widest text-[#D4AF37] mb-0.5">Bénéficiaire</span>
             <div class="flex items-center gap-2 w-full min-w-0">
               <input v-if="isEditingClient" ref="clientInput" v-model="tempClientName" @blur="saveClientName" @keyup.enter="saveClientName"
-                     class="text-xl font-black text-[#1A1A1A] tracking-tighter uppercase leading-none bg-gray-50 border-b-2 border-[#D4AF37] outline-none flex-1 min-w-0" />
+                     class="text-xl font-black text-[#1A1A1A] tracking-tighter uppercase leading-none bg-gray-50 border-b-2 border-[#D4AF37] outline-none flex-1 min-w-0 truncate" />
               <h1 v-else class="text-xl font-black text-[#1A1A1A] tracking-tighter uppercase leading-none truncate flex-1 min-w-0">
                 {{ dossier.client || 'CLIENT À DÉFINIR' }}
               </h1>
@@ -46,16 +46,16 @@
           
           <div class="w-full flex bg-gray-100 p-1 rounded-xl border-2 border-black overflow-x-auto hide-scrollbar shrink-0">
             <button v-for="(tab, idx) in ['simulation', 'ah', 'signature']" :key="tab" @click="activeDoc = tab"
-              class="flex-1 px-1 py-2.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap shrink-0"
+              class="flex-1 px-2 py-2.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap shrink-0"
               :class="activeDoc === tab ? 'bg-black text-[#D4AF37] shadow-md' : 'text-gray-400 hover:text-black'">
               {{ idx + 1 }}. {{ tab === 'simulation' ? 'Audit RAI' : tab === 'ah' ? 'Map AH' : 'Signature' }}
             </button>
           </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto overflow-x-hidden w-full p-4 flex flex-col gap-4 pb-20 custom-scrollbar-hide min-w-0">
+        <div class="flex-1 flex flex-col gap-4 p-4 pb-20 w-full min-w-0">
           
-          <div class="bg-white border-2 border-black rounded-[1.5rem] p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left relative overflow-hidden w-full min-w-0">
+          <div class="bg-white border-2 border-black rounded-[1.5rem] p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left relative overflow-hidden w-full min-w-0 shrink-0">
             
             <div v-if="activeDoc === 'simulation'" class="animate-fade-in space-y-5">
               <h2 class="text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 border-b border-gray-100 pb-3">
@@ -63,7 +63,7 @@
                 Contrôle Antériorité (RAI)
               </h2>
               <div class="space-y-4">
-                <div v-if="raiSent" class="p-5 bg-green-50 border-2 border-green-500 rounded-xl overflow-hidden">
+                <div v-if="raiSent" class="p-5 bg-green-50 border-2 border-green-500 rounded-xl overflow-hidden min-w-0">
                   <p class="text-[8px] font-black text-green-600 uppercase mb-1 truncate">RAI Horodaté eIDAS</p>
                   <p class="text-sm font-black tracking-tighter truncate">{{ formatDateHours(raiDate) }}</p>
                 </div>
@@ -71,7 +71,7 @@
                   Sceller l'incitation SMS
                 </button>
               </div>
-              <div class="bg-[#F5F2ED] border-2 border-dashed border-gray-300 rounded-xl p-5 flex flex-col justify-center min-w-0">
+              <div class="bg-[#F5F2ED] border-2 border-dashed border-gray-300 rounded-xl p-4 flex flex-col justify-center min-w-0">
                  <p class="text-[8px] font-black text-gray-400 uppercase mb-3 text-center truncate">Import preuve document</p>
                  <input type="date" v-model="manualRaiDate" class="w-full bg-white border-2 border-black rounded-lg p-2.5 text-[9px] font-black mb-3 outline-none" />
                  <button @click="triggerFileInput" class="w-full py-3 bg-white border-2 border-black rounded-lg text-[9px] font-black uppercase active:scale-95 transition-transform">Importer</button>
@@ -80,7 +80,7 @@
             </div>
 
             <div v-if="activeDoc === 'ah'" class="animate-fade-in space-y-6">
-              <div class="flex flex-col gap-4 border-b border-gray-100 pb-4">
+              <div class="flex flex-col gap-4 border-b border-gray-100 pb-4 min-w-0">
                 <h2 class="text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
                   <span class="w-6 h-6 bg-black text-[#D4AF37] rounded flex items-center justify-center text-[9px] shrink-0">02</span>
                   <span class="truncate">Mapping Réglementaire</span>
@@ -90,7 +90,7 @@
                    Extraction IA
                 </button>
               </div>
-              <div class="space-y-4">
+              <div class="space-y-4 min-w-0">
                 <h3 class="text-[9px] font-black uppercase text-[#D4AF37] tracking-widest truncate">Calendrier</h3>
                 <div class="grid grid-cols-2 gap-3 min-w-0">
                   <div class="space-y-1 min-w-0">
@@ -111,11 +111,11 @@
                   </div>
                 </div>
               </div>
-              <div class="space-y-4">
+              <div class="space-y-4 min-w-0">
                 <h3 class="text-[9px] font-black uppercase text-[#D4AF37] tracking-widest truncate">Spécifications</h3>
                 <div class="flex flex-col gap-3 min-w-0">
                   <input v-model="formData.surface" placeholder="Surface m²" class="w-full bg-gray-50 border-2 border-black rounded-lg p-3 text-[9px] font-black" />
-                  <div class="flex gap-3 w-full">
+                  <div class="flex gap-3 w-full min-w-0">
                     <input v-model="formData.resistance_thermique" placeholder="R" class="w-1/2 bg-gray-50 border-2 border-black rounded-lg p-3 text-[9px] font-black" />
                     <input v-model="formData.epaisseur" placeholder="Epais." class="w-1/2 bg-gray-50 border-2 border-black rounded-lg p-3 text-[9px] font-black" />
                   </div>
@@ -128,7 +128,7 @@
               </button>
             </div>
 
-            <div v-if="activeDoc === 'signature'" class="animate-fade-in space-y-6 text-left">
+            <div v-if="activeDoc === 'signature'" class="animate-fade-in space-y-6 text-left min-w-0">
               <h2 class="text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 mb-4 border-b border-gray-100 pb-3">
                 <span class="w-6 h-6 bg-black text-[#D4AF37] rounded flex items-center justify-center text-[9px] shrink-0">03</span>
                 <span class="truncate">Signature & Emmy</span>
@@ -146,7 +146,7 @@
             </div>
           </div>
 
-          <div class="bg-white border-2 border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col text-left gap-4 w-full min-w-0">
+          <div class="bg-white border-2 border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col text-left gap-4 w-full min-w-0 shrink-0">
              <div class="flex items-center gap-4 w-full min-w-0">
                 <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center text-lg border border-black/5 shrink-0">🏗️</div>
                 <div class="min-w-0 flex-1">
@@ -161,12 +161,11 @@
              </div>
           </div>
 
-          <div class="bg-white border-2 border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left flex flex-col overflow-hidden w-full min-w-0">
+          <div class="bg-white border-2 border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left flex flex-col overflow-hidden w-full min-w-0 shrink-0">
             <h2 class="text-[9px] font-black uppercase tracking-widest border-b border-gray-100 pb-3 flex justify-between items-center shrink-0">
                <span>Actifs Doc.</span>
             </h2>
             <div class="flex overflow-x-auto gap-4 items-start mt-4 pb-2 hide-scrollbar snap-x snap-mandatory w-full">
-              
               <div class="w-[45vw] shrink-0 snap-start flex flex-col gap-2 group cursor-pointer" @click="activeDoc = 'devis'; showDocModal = true">
                  <p class="text-[7px] font-black uppercase text-gray-400 truncate">Devis Client</p>
                  <div class="relative aspect-[21/29.7] w-full bg-white border-2 border-black rounded shadow-sm overflow-hidden">
@@ -174,7 +173,6 @@
                     <div class="absolute inset-0 bg-black/5"></div>
                  </div>
               </div>
-
               <div class="w-[45vw] shrink-0 snap-start flex flex-col gap-2 group cursor-pointer" @click="activeDoc = 'ah'; showDocModal = true">
                  <p class="text-[7px] font-black uppercase text-gray-400 truncate">Attestation AH</p>
                  <div class="relative aspect-[21/29.7] w-full bg-white border-2 border-black rounded shadow-sm overflow-hidden">
@@ -186,25 +184,23 @@
                     <div v-if="isAhGenerated" class="absolute bottom-2 right-2 bg-black text-[#D4AF37] px-1.5 py-0.5 rounded text-[5px] font-black uppercase shadow-lg">Scellé</div>
                  </div>
               </div>
-
               <div class="w-[45vw] shrink-0 snap-start flex flex-col gap-2 group cursor-pointer" @click="showCreateDocModal = true">
-                 <p class="text-[7px] font-black uppercase text-gray-400 truncate">Action</p>
+                 <p class="text-[7px] font-black uppercase text-gray-400">Action</p>
                  <div class="aspect-[21/29.7] w-full bg-[#F5F2ED] border-2 border-dashed border-black/20 rounded flex flex-col items-center justify-center gap-2">
                     <div class="w-8 h-8 rounded-full border border-black flex items-center justify-center bg-white shadow-sm shrink-0"><svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M12 4v16m8-8H4"/></svg></div>
                     <span class="text-[7px] font-black uppercase text-black/30 truncate max-w-full px-2">Nouveau</span>
                  </div>
               </div>
             </div>
-            
             <div v-if="dossier.auditIa?.decision" class="mt-4 pt-4 border-t border-gray-100 shrink-0 min-w-0">
                <div class="p-3 bg-[#FDFBF7] rounded-lg border border-black/5 shadow-inner text-left min-w-0">
                   <p class="text-[7px] font-black uppercase text-[#D4AF37] mb-1 tracking-widest truncate">Rapport Gemini IA</p>
-                  <p class="text-[9px] font-bold italic leading-relaxed text-black/70 break-words line-clamp-3">"{{ dossier.auditIa.decision }}"</p>
+                  <p class="text-[9px] font-bold italic leading-relaxed text-black/70 line-clamp-3">"{{ dossier.auditIa.decision }}"</p>
                </div>
             </div>
           </div>
 
-          <div class="min-h-[200px] bg-[#F5F2ED] rounded-[1.5rem] p-4 text-left flex flex-col overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black w-full min-w-0 shrink-0">
+          <div class="h-[250px] bg-[#F5F2ED] rounded-[1.5rem] p-4 text-left flex flex-col overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black w-full min-w-0 shrink-0">
              <div class="flex items-center justify-between mb-4 border-b border-black/10 pb-3 shrink-0 min-w-0">
                 <p class="text-[9px] font-black uppercase text-black/60 tracking-widest flex items-center gap-2 truncate">
                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.3)] shrink-0"></span>
@@ -228,7 +224,7 @@
         </div>
       </div>
 
-      <div v-else class="flex-1 flex flex-col overflow-hidden w-full relative">
+      <template v-else>
         <div class="bg-white border-b-2 border-black px-8 py-4 shrink-0 z-40 flex justify-between items-center shadow-sm">
           <div class="flex items-center gap-8">
             <div class="flex flex-col text-left group">
@@ -456,7 +452,8 @@
             </div>
           </div>
         </div>
-      </div>
+      </template>
+
     </template>
 
     <Teleport to="body">
@@ -472,14 +469,14 @@
 
     <Teleport to="body">
       <div v-if="showCreateDocModal" class="fixed inset-0 z-[1100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
-        <div class="bg-white w-full max-w-[90vw] md:max-w-sm rounded-2xl md:rounded-xl shadow-2xl border-4 border-black overflow-hidden">
-          <div class="p-5 md:p-6 border-b-2 border-black bg-gray-50 flex justify-between items-center text-left">
+        <div class="bg-white w-full max-w-[90vw] md:max-w-sm rounded-2xl md:rounded-xl shadow-2xl border-4 border-black overflow-hidden flex flex-col">
+          <div class="p-5 md:p-6 border-b-2 border-black bg-gray-50 flex justify-between items-center text-left shrink-0">
             <h2 class="text-lg md:text-xl font-black text-black uppercase tracking-tighter">Nouveau Doc</h2>
-            <button @click="showCreateDocModal = false" class="text-black hover:rotate-90 transition-transform"><svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg></button>
+            <button @click="showCreateDocModal = false" class="text-black hover:rotate-90 transition-transform"><svg class="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg></button>
           </div>
-          <div class="p-6 md:p-8 grid grid-cols-1 gap-3 md:gap-4 bg-white">
+          <div class="p-6 md:p-8 grid grid-cols-1 gap-3 md:gap-4 bg-white overflow-y-auto max-h-[60vh]">
             <button v-for="type in ['Devis d\'engagement', 'Facture travaux', 'Attestation AH']" :key="type"
-                    class="flex items-center justify-between p-4 md:p-5 bg-white border-2 border-black rounded-xl hover:bg-[#F5F2ED] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all active:scale-95">
+                    class="flex items-center justify-between p-4 md:p-5 bg-white border-2 border-black rounded-xl hover:bg-[#F5F2ED] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
               <span class="font-black uppercase text-[9px] md:text-[10px] tracking-widest text-left">{{ type }}</span>
               <svg class="w-4 h-4 md:w-5 md:h-5 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M12 4v16m8-8H4"/></svg>
             </button>
