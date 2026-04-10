@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // Utilise l'URL Render en production, sinon localhost en dev
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+  // Vérifie bien que VITE_API_URL est utilisé ici
+  baseURL: import.meta.env.VITE_API_URL || 'https://demotada.onrender.com',
   timeout: 30000,
 });
+
 
 api.interceptors.request.use(
   (config) => {
