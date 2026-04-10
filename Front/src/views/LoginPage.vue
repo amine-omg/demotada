@@ -124,7 +124,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '/services/api'
+import api from '@/services/api'
 import { useUserStore } from '../stores/user'
 
 const router = useRouter()

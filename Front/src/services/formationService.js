@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = `${import.meta.env.VITE_API_URL || 'https://demotada.onrender.com'}/api/formations`;
+const API_URL = `${import.meta.env.VITE_API_BASE_URL || 'https://demotada.onrender.com'}/api/formations`;
 
 // Récupérer toutes les formations
 export const getFormations = async () => {
