@@ -1,14 +1,24 @@
 <template>
   <div class="h-[100dvh] w-full max-w-[100vw] bg-[#F8F9FA] font-sans text-[#1A1A1A] flex flex-col overflow-hidden relative">
     
-    <TheHeader pageTitle="Dossiers CEE" class="shrink-0 w-full" />
+    <TheHeader pageTitle="Dossiers CEE" :showBackButton="false" class="shrink-0 w-full relative z-40 shadow-sm md:shadow-none" />
 
-    <div class="md:hidden shrink-0 w-full flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100 shadow-sm z-30">
-      <button @click="isMobileMenuOpen = true" class="flex items-center gap-2 text-[#1A1A1A] font-black text-[10px] uppercase tracking-widest bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200 active:scale-95 transition-transform shadow-sm">
-        <svg class="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        Menu & Actions
+    <div class="md:hidden shrink-0 w-full flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-100 z-30 overflow-x-auto hide-scrollbar">
+      
+      <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="shrink-0 p-2.5 text-[#1A1A1A] bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 active:scale-95 transition-all shadow-sm">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
-      <span class="text-[9px] font-black uppercase tracking-widest text-gray-400 bg-gray-100 px-2 py-1 rounded-md">{{ dossiers.length }} Dossiers</span>
+
+      <button @click="showCreateModal = true; isMobileMenuOpen = false" class="shrink-0 h-10 bg-[#1A1A1A] hover:bg-black text-white font-black uppercase tracking-widest text-[9px] px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-[2px_2px_0px_0px_rgba(212,175,55,0.4)] active:translate-y-0.5">
+        <svg class="w-3.5 h-3.5 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        Nouveau
+      </button>
+
+      <button @click="showActionsModal = true; isMobileMenuOpen = false" class="shrink-0 h-10 bg-white hover:bg-gray-50 text-[#1A1A1A] border-2 border-black font-black uppercase tracking-widest text-[9px] px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0.5">
+        <svg class="w-3.5 h-3.5 text-[#1A1A1A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        Actions
+      </button>
+
     </div>
 
     <div class="flex-1 flex overflow-hidden w-full relative min-w-0">
@@ -16,26 +26,19 @@
       <div 
         v-if="isMobileMenuOpen" 
         @click="isMobileMenuOpen = false" 
-        class="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity"
+        class="md:hidden absolute inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity"
       ></div>
 
       <aside 
         :class="isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'"
-        class="fixed md:relative inset-y-0 left-0 transform md:translate-x-0 transition-transform duration-300 ease-out z-50 md:z-10 w-[85%] max-w-sm md:w-64 bg-white border-r border-gray-200 flex flex-col py-6 px-4 shadow-[20px_0_40px_rgba(0,0,0,0.1)] md:shadow-[10px_0_30px_rgba(0,0,0,0.02)] shrink-0"
+        class="absolute md:relative inset-y-0 left-0 transform md:translate-x-0 transition-transform duration-300 ease-out z-50 md:z-10 w-[75%] max-w-[280px] md:w-64 bg-white border-r border-gray-200 flex flex-col py-6 px-4 shadow-[20px_0_40px_rgba(0,0,0,0.1)] md:shadow-[10px_0_30px_rgba(0,0,0,0.02)] shrink-0"
       >
-        <div class="md:hidden flex justify-between items-center mb-8 px-2 border-b border-gray-100 pb-4">
-          <span class="font-black text-xl italic tracking-tighter">Karnain<span class="text-[#D4AF37]">.</span></span>
-          <button @click="isMobileMenuOpen = false" class="p-2 text-gray-400 hover:text-black bg-gray-50 hover:bg-gray-100 rounded-full transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-          </button>
-        </div>
-
-        <div class="flex flex-col gap-3 mb-8">
-          <button @click="showCreateModal = true; isMobileMenuOpen = false" class="w-full h-12 bg-[#1A1A1A] hover:bg-black text-white font-black uppercase tracking-widest text-[10px] rounded-xl flex items-center justify-center gap-2 transition-all group shadow-[4px_4px_0px_0px_rgba(212,175,55,0.4)] hover:shadow-[4px_4px_0px_0px_rgba(212,175,55,1)] hover:-translate-y-0.5">
+        <div class="hidden md:flex flex-col gap-3 mb-8">
+          <button @click="showCreateModal = true" class="w-full h-12 bg-[#1A1A1A] hover:bg-black text-white font-black uppercase tracking-widest text-[10px] rounded-xl flex items-center justify-center gap-2 transition-all group shadow-[4px_4px_0px_0px_rgba(212,175,55,0.4)] hover:shadow-[4px_4px_0px_0px_rgba(212,175,55,1)] hover:-translate-y-0.5">
             <svg class="w-4 h-4 text-[#D4AF37] group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             Nouveau Dossier
           </button>
-          <button @click="showActionsModal = true; isMobileMenuOpen = false" class="w-full h-12 bg-white hover:bg-gray-50 text-[#1A1A1A] border-2 border-black font-black uppercase tracking-widest text-[10px] rounded-xl flex items-center justify-center gap-2 transition-all group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5">
+          <button @click="showActionsModal = true" class="w-full h-12 bg-white hover:bg-gray-50 text-[#1A1A1A] border-2 border-black font-black uppercase tracking-widest text-[10px] rounded-xl flex items-center justify-center gap-2 transition-all group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5">
             <svg class="w-4 h-4 text-[#1A1A1A] group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
             Actions Rapides
           </button>
