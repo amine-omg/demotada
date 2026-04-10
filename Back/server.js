@@ -163,7 +163,8 @@ const mongoUri = process.env.MONGO_URI;
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://demotada-1zyrks8wj-aminebellxs-projects.vercel.app'
+  'https://demotada-1zyrks8wj-aminebellxs-projects.vercel.app',
+  'https://demotada.vercel.app'
 ];
 
 const corsOptions = {
