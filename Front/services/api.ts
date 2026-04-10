@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  // Utilise l'URL Render en production, sinon localhost en dev
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+  timeout: 30000,
 });
 
 api.interceptors.request.use(
