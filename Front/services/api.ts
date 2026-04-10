@@ -1,11 +1,12 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // Vérifie bien que VITE_API_URL est utilisé ici
+  // Utilise la variable d'env Vercel, ou l'URL Render en secours
   baseURL: import.meta.env.VITE_API_URL || 'https://demotada.onrender.com',
   timeout: 30000,
+  // INDISPENSABLE : Ton backend (server.js) l'exige pour le CORS
+  withCredentials: true 
 });
-
 
 api.interceptors.request.use(
   (config) => {

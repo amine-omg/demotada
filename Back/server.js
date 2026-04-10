@@ -162,18 +162,22 @@ const port = process.env.PORT || 3000;
 const mongoUri = process.env.MONGO_URI;
 
 const allowedOrigins = [
-  'http://app.syali.fr',
-  'https://app.syali.fr',
-  'http://localhost:5173', // Port par défaut de Vite (ton front local)
-  'http://localhost:3000',  // Ton port backend local si besoin
+  'http://localhost:5173',
   'https://demotada-1zyrks8wj-aminebellxs-projects.vercel.app'
 ];
 
-// 2. Configuration dynamique de CORS
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || '*',
+  origin: function (origin, callback) {
+    // Autorise les requêtes sans origine (comme Postman ou mobiles) 
+    // ou si l'origine est dans notre liste
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Refusé par CORS'));
+    }
+  },
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
+  credentials: true, // INDISPENSABLE car ton front a withCredentials: true
   optionsSuccessStatus: 200 
 };
 
