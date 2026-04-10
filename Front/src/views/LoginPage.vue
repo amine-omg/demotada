@@ -160,7 +160,7 @@ const handleLogin = async () => {
     await userStore.login(cleanEmail, password.value);
 
     // 4. Redirection en cas de succès
-    router.push('/formations');
+    router.push('/dashboard');
   } catch (error: any) {
     console.error('Login failed:', error.response ? error.response.data : error.message);
     alert('Connexion échouée : identifiants invalides ou erreur serveur.');
@@ -173,7 +173,7 @@ window.handleGoogleLogin = async (response) => {
     const res = await api.post('/api/auth/google', { idToken: response.credential })
     userStore.setUserData(res.data.user)
     userStore.setAuthToken(res.data.token)
-    router.push('/formations')
+    router.push('/dashboard')
   } catch (error: any) {
     console.error('Erreur lors de la connexion Google :', error.response ? error.response.data : error.message)
     alert('Erreur lors de la connexion Google : ' + (error.response?.data?.message || error.message))
