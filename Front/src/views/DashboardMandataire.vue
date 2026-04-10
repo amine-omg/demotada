@@ -1,16 +1,17 @@
 <template>
   <div class="min-h-screen bg-[#F8F9FA] font-sans text-[#1A1A1A] flex flex-col overflow-hidden relative">
     
-    <TheHeader pageTitle="Boîte de Réception CEE" :showBackButton="false" class="hidden md:flex" />
+    <TheHeader pageTitle="Boîte de Réception CEE" :showBackButton="false" class="shrink-0" />
 
-    <div class="md:hidden flex items-center justify-between px-6 py-4 bg-white border-b border-gray-100 shadow-sm z-30 shrink-0">
-      <button @click="isMobileMenuOpen = true" class="text-[#1A1A1A] p-2 -ml-2 hover:bg-gray-50 rounded-xl transition-colors">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+    <div class="md:hidden flex items-center justify-between px-6 py-3 bg-white border-b border-gray-100 shadow-sm z-30 shrink-0">
+      <button @click="isMobileMenuOpen = true" class="flex items-center gap-2 text-[#1A1A1A] font-black text-xs uppercase tracking-widest bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200 active:scale-95 transition-transform shadow-sm">
+        <svg class="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        Menu & Actions
       </button>
-      <span class="font-black text-sm uppercase tracking-widest text-[#1A1A1A]">Réception <span class="text-[#D4AF37]">CEE</span></span>
-      <div class="w-10"></div> </div>
+      <span class="text-[9px] font-black uppercase tracking-widest text-gray-400 bg-gray-100 px-2 py-1 rounded-md">{{ dossiers.length }} Dossiers</span>
+    </div>
 
-    <div class="flex-1 flex h-[calc(100vh-6rem)] overflow-hidden relative w-full">
+    <div class="flex-1 flex h-[calc(100vh-6rem)] md:h-[calc(100vh-6rem)] overflow-hidden relative w-full">
       
       <div 
         v-if="isMobileMenuOpen" 
@@ -20,11 +21,11 @@
 
       <aside 
         :class="isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'"
-        class="fixed md:relative inset-y-0 left-0 transform md:translate-x-0 transition-transform duration-300 ease-out z-50 md:z-10 w-4/5 max-w-sm md:w-64 bg-white border-r border-gray-200 flex flex-col py-6 px-4 shadow-[20px_0_40px_rgba(0,0,0,0.1)] md:shadow-[10px_0_30px_rgba(0,0,0,0.02)] shrink-0"
+        class="fixed md:relative inset-y-0 left-0 transform md:translate-x-0 transition-transform duration-300 ease-out z-50 md:z-10 w-[85%] max-w-sm md:w-64 bg-white border-r border-gray-200 flex flex-col py-6 px-4 shadow-[20px_0_40px_rgba(0,0,0,0.1)] md:shadow-[10px_0_30px_rgba(0,0,0,0.02)] shrink-0"
       >
-        <div class="md:hidden flex justify-between items-center mb-8 px-2">
+        <div class="md:hidden flex justify-between items-center mb-8 px-2 border-b border-gray-100 pb-4">
           <span class="font-black text-xl italic tracking-tighter">Karnain<span class="text-[#D4AF37]">.</span></span>
-          <button @click="isMobileMenuOpen = false" class="p-2 text-gray-400 hover:text-black bg-gray-50 rounded-full">
+          <button @click="isMobileMenuOpen = false" class="p-2 text-gray-400 hover:text-black bg-gray-50 hover:bg-gray-100 rounded-full transition-colors">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
@@ -69,26 +70,32 @@
 
       <main class="flex-1 flex flex-col bg-white overflow-hidden relative w-full">
         
-        <div class="px-6 md:px-8 pt-6 md:pt-8 pb-4 flex overflow-x-auto hide-scrollbar snap-x md:grid md:grid-cols-4 gap-4 shrink-0">
-          <div class="min-w-[160px] md:min-w-0 snap-start bg-white border-2 border-black p-4 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left">
-            <p class="text-[8px] font-black uppercase text-gray-400 tracking-widest mb-1">Simulations</p>
-            <p class="text-xl font-black">{{ stats.simulation }} <span class="text-[10px] text-[#D4AF37]">PROSPECTS</span></p>
+        <div class="px-6 md:px-8 pt-6 md:pt-8 pb-4 flex flex-nowrap overflow-x-auto hide-scrollbar gap-4 shrink-0 w-full snap-x snap-mandatory md:grid md:grid-cols-4">
+          
+          <div class="w-[75vw] sm:w-[300px] md:w-auto shrink-0 snap-center md:snap-align-none bg-white border-2 border-black p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left">
+            <p class="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-2">Simulations</p>
+            <p class="text-2xl font-black">{{ stats.simulation }} <span class="text-[10px] text-[#D4AF37] ml-1">PROSPECTS</span></p>
           </div>
-          <div @click="currentFilter = 'anomaly'" class="min-w-[160px] md:min-w-0 snap-start bg-white border-2 border-black p-4 rounded-2xl shadow-[4px_4px_0px_0px_rgba(212,175,55,1)] cursor-pointer md:hover:scale-[1.02] transition-all text-left">
-            <p class="text-[8px] font-black uppercase text-[#D4AF37] tracking-widest mb-1">Alertes IA</p>
-            <p class="text-xl font-black text-[#D4AF37]">{{ stats.anomaly }} <span class="text-[10px]">BLOQUÉS</span></p>
+          
+          <div @click="currentFilter = 'anomaly'" class="w-[75vw] sm:w-[300px] md:w-auto shrink-0 snap-center md:snap-align-none bg-white border-2 border-black p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(212,175,55,1)] cursor-pointer md:hover:-translate-y-1 transition-transform text-left">
+            <p class="text-[9px] font-black uppercase text-[#D4AF37] tracking-widest mb-2">Alertes IA</p>
+            <p class="text-2xl font-black text-[#D4AF37]">{{ stats.anomaly }} <span class="text-[10px] ml-1">BLOQUÉS</span></p>
           </div>
-          <div class="min-w-[160px] md:min-w-0 snap-start bg-white border-2 border-black p-4 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left">
-            <p class="text-[8px] font-black uppercase text-gray-400 tracking-widest mb-1">En cours Signature</p>
-            <p class="text-xl font-black">{{ stats.to_sign }} <span class="text-[10px] text-gray-400">DOSSIERS</span></p>
+          
+          <div class="w-[75vw] sm:w-[300px] md:w-auto shrink-0 snap-center md:snap-align-none bg-white border-2 border-black p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left">
+            <p class="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-2">En cours Signature</p>
+            <p class="text-2xl font-black">{{ stats.to_sign }} <span class="text-[10px] text-gray-400 ml-1">DOSSIERS</span></p>
           </div>
-          <div class="min-w-[160px] md:min-w-0 snap-start bg-[#1A1A1A] p-4 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left">
-            <p class="text-[8px] font-black uppercase text-gray-400 tracking-widest mb-1">Volumes Déposés</p>
-            <p class="text-xl font-black text-[#D4AF37] tabular-nums">1.2 <span class="text-[10px] text-white">GWh</span></p>
+          
+          <div class="w-[75vw] sm:w-[300px] md:w-auto shrink-0 snap-center md:snap-align-none bg-[#1A1A1A] p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left">
+            <p class="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-2">Volumes Déposés</p>
+            <p class="text-2xl font-black text-[#D4AF37] tabular-nums">1.2 <span class="text-[10px] text-white ml-1">GWh</span></p>
           </div>
+
+          <div class="w-2 md:hidden shrink-0"></div>
         </div>
 
-        <div class="h-14 border-b border-gray-100 flex items-center px-6 md:px-8 bg-white shrink-0 overflow-x-auto hide-scrollbar">
+        <div class="h-14 border-b border-gray-100 flex items-center px-6 md:px-8 bg-white shrink-0 overflow-x-auto hide-scrollbar w-full">
           <div class="flex items-center gap-4 md:gap-6 min-w-max">
             <div class="flex items-center gap-2">
               <input type="checkbox" class="w-4 h-4 rounded border-gray-300 text-[#D4AF37] focus:ring-black cursor-pointer" />
@@ -97,10 +104,10 @@
               </button>
             </div>
             <div class="h-4 w-px bg-gray-200"></div>
-            <div class="flex gap-4">
-               <button @click="currentFilter = 'all'" class="text-[9px] font-black uppercase tracking-widest px-1 pb-1" :class="currentFilter === 'all' ? 'text-black border-b-2 border-black' : 'text-gray-400'">Tous</button>
-               <button @click="currentFilter = 'simulation'" class="text-[9px] font-black uppercase tracking-widest px-1 pb-1" :class="currentFilter === 'simulation' ? 'text-black border-b-2 border-black' : 'text-gray-400'">Simulations</button>
-               <button @click="currentFilter = 'to_sign'" class="text-[9px] font-black uppercase tracking-widest px-1 pb-1" :class="currentFilter === 'to_sign' ? 'text-black border-b-2 border-black' : 'text-gray-400'">Signatures</button>
+            <div class="flex gap-5">
+               <button @click="currentFilter = 'all'" class="text-[9px] font-black uppercase tracking-widest whitespace-nowrap px-1 pb-1 transition-all" :class="currentFilter === 'all' ? 'text-black border-b-2 border-black' : 'text-gray-400 hover:text-black'">Tous</button>
+               <button @click="currentFilter = 'simulation'" class="text-[9px] font-black uppercase tracking-widest whitespace-nowrap px-1 pb-1 transition-all" :class="currentFilter === 'simulation' ? 'text-black border-b-2 border-black' : 'text-gray-400 hover:text-black'">Simulations</button>
+               <button @click="currentFilter = 'to_sign'" class="text-[9px] font-black uppercase tracking-widest whitespace-nowrap px-1 pb-1 transition-all" :class="currentFilter === 'to_sign' ? 'text-black border-b-2 border-black' : 'text-gray-400 hover:text-black'">Signatures</button>
             </div>
           </div>
         </div>
@@ -114,7 +121,7 @@
             v-for="dossier in filteredDossiers" 
             :key="dossier._id"
             @click="goToDossier(dossier)"
-            class="flex flex-col md:flex-row md:items-center px-6 md:px-8 py-4 md:py-5 border-b border-gray-50 hover:bg-gray-50/50 cursor-pointer group transition-all relative gap-3 md:gap-0"
+            class="flex flex-col md:flex-row md:items-center px-6 md:px-8 py-5 border-b border-gray-50 hover:bg-gray-50/50 cursor-pointer group transition-all relative gap-3 md:gap-0"
           >
             <div class="absolute left-0 top-0 bottom-0 w-1" :class="getStatusColor(dossier.status).border"></div>
 
@@ -123,7 +130,7 @@
                 <p class="text-sm font-black text-[#1A1A1A] truncate group-hover:text-[#D4AF37] transition-colors">{{ dossier.installateur || 'Installateur CEE' }}</p>
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest truncate mt-1">{{ dossier.client || 'Client anonyme' }}</p>
               </div>
-              <span class="md:hidden px-2 py-1 rounded-md text-[7px] font-black uppercase tracking-widest border-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] shrink-0" :class="getStatusColor(dossier.status).badge">
+              <span class="md:hidden px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest border-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] shrink-0" :class="getStatusColor(dossier.status).badge">
                 {{ getStatusLabel(dossier.status) }}
               </span>
             </div>
@@ -134,9 +141,9 @@
               </span>
             </div>
 
-            <div class="flex items-center gap-2 md:gap-3 flex-1 min-w-0 pr-0 md:pr-4 text-left">
-              <span class="text-[9px] md:text-[10px] font-black text-[#1A1A1A] shrink-0 bg-[#F5F2ED] px-2 py-0.5 rounded-md border border-black/5">{{ dossier.ficheCee || 'BAR-EN-101' }}</span>
-              <span class="text-[10px] md:text-[11px] text-gray-500 truncate group-hover:text-black transition-colors">{{ dossier.auditIa?.decision || 'Analyse administrative en attente...' }}</span>
+            <div class="flex items-center gap-3 flex-1 min-w-0 pr-0 md:pr-4 text-left">
+              <span class="text-[10px] font-black text-[#1A1A1A] shrink-0 bg-[#F5F2ED] px-2 py-0.5 rounded-md border border-black/5">{{ dossier.ficheCee || 'BAR-EN-101' }}</span>
+              <span class="text-[11px] text-gray-500 truncate group-hover:text-black transition-colors">{{ dossier.auditIa?.decision || 'Analyse administrative en attente...' }}</span>
             </div>
 
             <div class="hidden md:flex items-center gap-6 shrink-0">
@@ -149,7 +156,7 @@
 
           <div v-if="filteredDossiers.length === 0 && !isLoadingData" class="flex flex-col items-center justify-center h-96 text-gray-300">
             <div class="text-6xl mb-6 opacity-10">📂</div>
-            <p class="text-[10px] font-black uppercase tracking-[0.4em] text-center px-4">Aucun dossier dans cette étape</p>
+            <p class="text-[10px] font-black uppercase tracking-[0.4em] text-center">Aucun dossier dans cette étape</p>
           </div>
         </div>
       </main>
@@ -162,7 +169,7 @@
             <h2 class="text-lg md:text-xl font-black text-[#1A1A1A] tracking-tighter">Initialisation IA</h2>
             <p class="text-[8px] md:text-[9px] text-[#D4AF37] font-black uppercase tracking-[0.2em] mt-1 md:mt-2">Nouveau Mandat CEE</p>
           </div>
-          <button @click="showCreateModal = false" class="text-gray-400 hover:text-black transition-colors p-2 bg-gray-50 rounded-full">
+          <button @click="showCreateModal = false" class="text-gray-400 hover:text-black transition-colors w-10 h-10 flex items-center justify-center bg-gray-50 rounded-full hover:bg-gray-100">
             <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
